@@ -1,0 +1,10 @@
+[unstable]
+build-std = ["core", "compiler_builtins", "alloc"]
+build-std-features = ["compiler-builtins-mem"]
+
+[build]
+target = "x86_unknown_none.json"
+rustflags = [
+    "-C", "code-model=kernel",
+    "-C", "relocation-model=static",
+]

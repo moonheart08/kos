@@ -1,0 +1,48 @@
+extend = [{ path = "./x86_64/Makefile.toml" }]
+
+[env.development]
+PROFILE = "dev"
+
+[env.release]
+PROFILE = "release"
+
+[tasks.default]
+clear = true
+command = "echo"
+args = ["You forgot to pick a build action. No default set."]
+
+[tasks.legacy-migration]
+disabled = true
+
+[tasks.build]
+clear = true
+script_runner = "@duckscript"
+script = '''
+    cm_run_task build_${1}
+'''
+
+[tasks.check]
+clear = true
+script_runner = "@duckscript"
+script = '''
+    cm_run_task check_${1}
+'''
+
+[tasks.clean]
+clear = true
+dependencies = [ "clean_common", "clean_x86", "clean_x86_64" ]
+
+[tasks.clean_common]
+command = "cargo"
+cwd = "common"
+args = ["clean"]
+
+[tasks.clean_x86]
+command = "cargo"
+cwd = "x86"
+args = ["clean"]
+
+[tasks.clean_x86_64]
+command = "cargo"
+cwd = "x86_64"
+args = ["clean"]
