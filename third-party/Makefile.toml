@@ -1,12 +1,35 @@
 [tasks.third_party]
-dependencies = [ "submodules", "limine" ]
+dependencies = [ "submodules", "ovmf", "limine" ]
 
 [tasks.submodules]
 condition = { files_not_exist = [ "third-party/limine/limine.c" ] }
 command = "git"
 args = [ "submodule", "update", "--init", "--recursive"]
 
+[tasks.ovmf]
+condition = { files_not_exist = [ "third-party/ovmf/OVMF.fd" ] }
+script = '''
+    mkdir -p third-party/ovmf
+    cd third-party/ovmf
+    curl -Lo OVMF.fd https://retrage.github.io/edk2-nightly/bin/RELEASEX64_OVMF.fd
+'''
+
 [tasks.limine]
+dependencies = ["limine_to_env_root", "limine_build"]
+
+[tasks.limine_build]
+private = true
 command = "make"
 cwd = "third-party/limine"
 args = ["limine"]
+
+[tasks.limine_to_env_root]
+private = true
+script = '''
+    cp third-party/limine/BOOTX64.EFI test_env_root/boot/limine/BOOTX64.EFI
+    cp third-party/limine/BOOTIA32.EFI test_env_root/boot/limine/BOOTIA32.EFI
+    
+    cp third-party/limine/limine-bios.sys test_env_root/boot/limine/limine-bios.sys
+    cp third-party/limine/limine-uefi-cd.bin test_env_root/boot/limine/limine-uefi-cd.bin
+    cp third-party/limine/limine-bios-cd.bin test_env_root/boot/limine/limine-bios-cd.bin
+'''

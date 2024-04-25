@@ -1,9 +1,6 @@
-[env]
-X86_64_LIMINE_LOC = "x86_64/target/x86_64-unknown-none/${PROFILE}/x86_64_limine"
-
 [tasks.run_x86_64]
-toolchain = "nightly"
-dependencies = [ "build_x86_64_limine" ]
+run_task = "qemu_run_x86_64_limine_iso"
+dependencies = [ "install_bios_loader_into_x86_64_limine_iso" ]
 
 [tasks.build_x86_64]
 toolchain = "nightly"
@@ -12,6 +9,13 @@ dependencies = [ "build_x86_64_limine" ]
 [tasks.check_x86_64]
 toolchain = "nightly"
 dependencies = [ "check_x86_64_limine" ]
+
+[tasks.emplace_x86_64_limine]
+command = "cp"
+args = [
+    "x86_64/target/x86_64-unknown-none/${PROFILE_DIR}/x86_64_limine", "test_env_root/boot/kernel"
+]
+dependencies = ["build_x86_64_limine"]
 
 [tasks.build_x86_64_limine]
 toolchain = "nightly"
@@ -24,3 +28,34 @@ toolchain = "nightly"
 command = "cargo"
 cwd = "x86_64"
 args = ["check", "--profile", "${PROFILE}", "--target", "x86_64-unknown-none", "--package", "x86_64_limine"]
+
+[tasks.install_bios_loader_into_x86_64_limine_iso]
+command = "third-party/limine/limine"
+args = [ "bios-install", "${TARGET_DIR}/x86_64_test_env.iso" ]
+dependencies = [ "create_x86_64_limine_iso" ]
+
+[tasks.create_x86_64_limine_iso]
+command = "xorriso"
+args = [
+    "-as", "mkisofs",
+    "-b", "boot/limine/limine-bios-cd.bin",
+    "-no-emul-boot",
+    "-boot-load-size", "4",
+    "-boot-info-table",
+    "--efi-boot", "boot/limine/limine-uefi-cd.bin",
+    "-efi-boot-part",
+    "--efi-boot-image",
+    "--protective-msdos-label",
+    "test_env_root",
+    "-o", "${TARGET_DIR}/x86_64_test_env.iso"
+]
+dependencies = [ "emplace_x86_64_limine" ]
+
+[tasks.qemu_run_x86_64_limine_iso]
+command = "qemu-system-x86_64"
+args = [
+    "-M", "q35",
+    "-m", "512M",
+    "-bios", "third-party/ovmf/OVMF.fd",
+    "-cdrom", "${TARGET_DIR}/x86_64_test_env.iso"
+]

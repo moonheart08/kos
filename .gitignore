@@ -1,1 +1,7 @@
 /target/
+*.efi
+*.EFI
+*.bin
+*.sys
+*.exe
+test_env_root/boot/kernel

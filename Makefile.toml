@@ -1,13 +1,15 @@
 extend = [{ path = "./x86_64/Makefile.toml" }, { path = "./third-party/Makefile.toml"}]
 
 [env]
-BOOTLOADER = "limine"
+TARGET_DIR = "target"
 
 [env.development]
 PROFILE = "dev"
+PROFILE_DIR = "debug"
 
 [env.release]
 PROFILE = "release"
+PROFILE_DIR = "release"
 
 [tasks.init]
 command = "mkdir"
