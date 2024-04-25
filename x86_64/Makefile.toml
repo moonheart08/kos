@@ -1,19 +1,26 @@
+[env]
+X86_64_LIMINE_LOC = "x86_64/target/x86_64-unknown-none/${PROFILE}/x86_64_limine"
+
+[tasks.run_x86_64]
+toolchain = "nightly"
+dependencies = [ "build_x86_64_limine" ]
+
 [tasks.build_x86_64]
 toolchain = "nightly"
-dependencies = [ "build_multiboot2" ]
+dependencies = [ "build_x86_64_limine" ]
 
 [tasks.check_x86_64]
 toolchain = "nightly"
-dependencies = [ "check_multiboot2" ]
+dependencies = [ "check_x86_64_limine" ]
 
-[tasks.build_multiboot2]
+[tasks.build_x86_64_limine]
 toolchain = "nightly"
 command = "cargo"
-cwd = "x86"
-args = ["build", "-p", "multiboot2_loader", "--profile", "${PROFILE}"]
+cwd = "x86_64"
+args = ["build", "--profile", "${PROFILE}", "--target", "x86_64-unknown-none", "--package", "x86_64_limine"]
 
-[tasks.check_multiboot2]
+[tasks.check_x86_64_limine]
 toolchain = "nightly"
 command = "cargo"
-cwd = "x86"
-args = ["check", "-p", "multiboot2_loader", "--profile", "${PROFILE}"]
+cwd = "x86_64"
+args = ["check", "--profile", "${PROFILE}", "--target", "x86_64-unknown-none", "--package", "x86_64_limine"]

@@ -1,10 +1,17 @@
-extend = [{ path = "./x86_64/Makefile.toml" }]
+extend = [{ path = "./x86_64/Makefile.toml" }, { path = "./third-party/Makefile.toml"}]
+
+[env]
+BOOTLOADER = "limine"
 
 [env.development]
 PROFILE = "dev"
 
 [env.release]
 PROFILE = "release"
+
+[tasks.init]
+command = "mkdir"
+args = ["-p", "target"]
 
 [tasks.default]
 clear = true
@@ -14,8 +21,17 @@ args = ["You forgot to pick a build action. No default set."]
 [tasks.legacy-migration]
 disabled = true
 
+[tasks.run]
+clear = true
+dependencies = [ "third_party" ]
+script_runner = "@duckscript"
+script = '''
+    cm_run_task run_${1}
+'''
+
 [tasks.build]
 clear = true
+dependencies = [ "third_party" ]
 script_runner = "@duckscript"
 script = '''
     cm_run_task build_${1}
@@ -23,6 +39,7 @@ script = '''
 
 [tasks.check]
 clear = true
+dependencies = [ "third_party" ]
 script_runner = "@duckscript"
 script = '''
     cm_run_task check_${1}
@@ -30,16 +47,11 @@ script = '''
 
 [tasks.clean]
 clear = true
-dependencies = [ "clean_common", "clean_x86", "clean_x86_64" ]
+dependencies = [ "clean_common", "clean_x86_64" ]
 
 [tasks.clean_common]
 command = "cargo"
 cwd = "common"
-args = ["clean"]
-
-[tasks.clean_x86]
-command = "cargo"
-cwd = "x86"
 args = ["clean"]
 
 [tasks.clean_x86_64]

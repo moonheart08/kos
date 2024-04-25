@@ -1,14 +1,13 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+#![no_std]
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[cfg(any(target_arch = "x86_64", target_arch = "i686"))]
+pub fn halt() -> ! {
+    use core::arch::asm;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    unsafe {
+        asm!("cli");
+        loop {
+            asm!("hlt");
+        }
     }
 }

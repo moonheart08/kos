@@ -1,0 +1,12 @@
+[tasks.third_party]
+dependencies = [ "submodules", "limine" ]
+
+[tasks.submodules]
+condition = { files_not_exist = [ "third-party/limine/limine.c" ] }
+command = "git"
+args = [ "submodule", "update", "--init", "--recursive"]
+
+[tasks.limine]
+command = "make"
+cwd = "third-party/limine"
+args = ["limine"]
