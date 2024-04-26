@@ -7,3 +7,6 @@
 test_env_root/boot/kernel
 
 bazel-*
+
+rust-analyzer.json
+rust-project.json

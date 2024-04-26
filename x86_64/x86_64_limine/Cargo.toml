@@ -1,9 +1,0 @@
-[package]
-name = "x86_64_limine"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-limine = "0.2.0"
-kos-kernel = {path = "../../common/kos-kernel"}
-kos-memory = {path = "../../common/kos-memory"}

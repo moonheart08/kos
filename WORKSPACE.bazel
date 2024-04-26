@@ -28,8 +28,11 @@ crates_repository(
             version = "0.9.8",
         ),
         "talc": crate.spec(
-            version = "4.4.1",
+            version = "^4.4",
         ),
+        "x86_64": crate.spec(
+            version = "^0.15",
+        )
     },
 
     render_config = render_config(
@@ -42,3 +45,7 @@ crates_repository(
 load("@crate_index//:defs.bzl", "crate_repositories")
 
 crate_repositories()
+
+load("@rules_rust//tools/rust_analyzer:deps.bzl", "rust_analyzer_dependencies")
+
+rust_analyzer_dependencies()
