@@ -1,0 +1,44 @@
+workspace(name = "kos")
+
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+
+rules_rust_dependencies()
+
+rust_register_toolchains(
+    edition = "2021",
+    versions = [
+        "nightly/2024-04-26"
+    ],
+)
+
+load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
+
+crate_universe_dependencies()
+
+load("@rules_rust//crate_universe:defs.bzl", "crate", "crates_repository", "render_config")
+
+crates_repository(
+    name = "crate_index",
+    cargo_lockfile = "//:Cargo.lock",
+    packages = {
+        "limine": crate.spec(
+            version = "0.2.0",
+        ),
+        "spin": crate.spec(
+            version = "0.9.8",
+        ),
+        "talc": crate.spec(
+            version = "4.4.1",
+        ),
+    },
+
+    render_config = render_config(
+        default_package_name = ""
+    ),
+
+    rust_version="nightly/2024-04-26"
+)
+
+load("@crate_index//:defs.bzl", "crate_repositories")
+
+crate_repositories()
