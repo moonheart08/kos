@@ -1,0 +1,12 @@
+[package]
+name = "kos-memory"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+spin = "0.9.8"
+talc = "4.4.1"
+
+[features]
+16k_pages = []
+4k_pages = []

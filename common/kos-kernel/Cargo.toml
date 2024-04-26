@@ -4,3 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+spin = "0.9.8"
+
+[target.'cfg(target_arch = "x86_64")'.dependencies]
+x86_64 = {version = "^0.15"}
+kos-memory = { path = "../kos-memory", features = ["4k_pages"]}

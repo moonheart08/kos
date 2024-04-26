@@ -1,13 +1,18 @@
 #![no_std]
 
-#[cfg(any(target_arch = "x86_64", target_arch = "i686"))]
-pub fn halt() -> ! {
-    use core::arch::asm;
+extern crate alloc;
 
-    unsafe {
-        asm!("cli");
-        loop {
-            asm!("hlt");
-        }
-    }
-}
+mod util;
+pub use util::*;
+
+use kos_memory::talc;
+
+
+static mut ARENA: [u8; 32768] = [0; 32768];
+
+#[global_allocator]
+static ALLOCATOR: talc::Talck<spin::Mutex<()>, talc::ClaimOnOom> = talc::Talc::new(unsafe {
+    // if we're in a hosted environment, the Rust runtime may allocate before
+    // main() is called, so we need to initialize the arena automatically
+    talc::ClaimOnOom::new(talc::Span::from_const_array(core::ptr::addr_of!(ARENA)))
+}).lock();

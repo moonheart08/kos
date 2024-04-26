@@ -1,0 +1,2 @@
+# Stack
+Programmers must not assume more than 4KiB of available space on the kernel stack. While it is in practice much larger (i.e. 64KiB), an overflow is an irrecoverable and fatal error, and must be avoided.
